@@ -1,2 +1,0 @@
-// Para ejecutar este archivo usar el comando CTRL+ALT+R
-GET http://localhost:3001/api/notes 
