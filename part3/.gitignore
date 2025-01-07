@@ -1,2 +1,4 @@
 render-test/
+# Ignorar la carpeta phonebook_backend
 phonebook_backend/
+
