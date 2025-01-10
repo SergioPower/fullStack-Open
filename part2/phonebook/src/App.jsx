@@ -21,42 +21,75 @@ const App = () => {
   },[])
 
   const addPerson = (event) => {
-    event.preventDefault()
-    if (persons.find(person => person.name === newName) && persons.find(person => person.number === newPhone)) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
-    if (persons.find(person => person.name === newName) && persons.find(person => person.number !== newPhone)) {
-      if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`))
-      return
-      
-    }
-    const personObject = {
-      name: newName,
-      number: newPhone,
-      id: persons.length + 1
-    }
-    bookService
-      .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewPhone('')
-        setErrorMessage(`Added ${newName}`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
-      })
+  event.preventDefault();
+
+  const personExists = persons.find(person => person.name === newName);
+  const personWithDifferentPhone = personExists && personExists.number !== newPhone;
+
+  if (personExists && !personWithDifferentPhone) {
+    alert(`${newName} is already added to phonebook`);
+    return;
   }
+
+  if (personWithDifferentPhone) {
+    if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+      const updatedPerson = { ...personExists, number: newPhone };
+
+      bookService
+        .update(updatedPerson.id, updatedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson));
+          setNewName('');
+          setNewPhone('');
+          setErrorMessage(`Updated ${newName}'s phone number`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        })
+        .catch(error => {
+          setErrorMessage(`Failed to update ${newName}: ${error.response.data.error}`);
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
+    }
+    return;
+  }
+
+  const personObject = {
+    name: newName,
+    number: newPhone,
+    id: persons.length + 1, // Asegúrate de que la ID sea única o usa el id generado en el backend.
+  };
+
+  bookService
+    .create(personObject)
+    .then(returnedPerson => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName('');
+      setNewPhone('');
+      setErrorMessage(`Added ${newName}`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    })
+    .catch(error => {
+      setErrorMessage(`Failed to add ${newName}: ${error.response.data.error}`);
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    });
+};
+
 
   const deletePerson = (id) => {
     console.log(id);
     
     const person = persons.find(person => person.id === id)
     if(window.confirm(`Delete ${person.name}?`)){
-      noteService
+      bookService
         .deletePerson(id)
-        .then(returnedPersonDelete => {
+        .then(() => {
           setPersons(persons.filter(person => person.id !== id))
         })
     }
