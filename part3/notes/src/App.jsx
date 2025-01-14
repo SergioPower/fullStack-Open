@@ -49,8 +49,8 @@ const App = () => {
           `Note '${note.content}' was already removed from server`
         )
         setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+		  setErrorMessage(null);
+		}, 5000);
         setNotes(notes.filter(n => n.id !== id))
       })
   }

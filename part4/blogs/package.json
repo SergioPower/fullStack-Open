@@ -1,0 +1,27 @@
+{
+    "name": "blogs_list",
+    "version": "1.0.0",
+    "description": "",
+    "main": "node index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "lint": "standard",
+        "lint:fix": "standard --fix",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
+        "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "2.8.5",
+        "dotenv": "16.4.7",
+        "express": "4.21.2",
+        "mongoose": "8.9.3"
+    },
+    "devDependencies": {
+        "nodemon": "3.1.9",
+        "standard": "17.1.2"
+    }
+}
