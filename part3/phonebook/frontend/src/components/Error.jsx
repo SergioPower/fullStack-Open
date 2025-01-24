@@ -1,11 +1,13 @@
+import styles from '../styles/Notifications.module.css'
+
 const Notification = ({ message }) => {
   if (!message) {
     return null;
   }
 
   return (
-    <div className="error">
-      {message}
+    <div className="error" className={styles.notificationContainer}>
+      <p className={styles.notificationMessage}>{message}</p>
     </div>
   )
 }

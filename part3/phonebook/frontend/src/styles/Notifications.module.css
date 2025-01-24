@@ -1,0 +1,13 @@
+.notificationContainer {
+	padding: 10px;
+	margin-bottom: 20px;
+	background-color: #ffebee;
+	border: 1px solid #ffcdd2;
+	border-radius: 4px;
+	color: #c62828;
+	font-family: 'Roboto', sans-serif;
+}
+
+.notificationMessage {
+	margin: 0;
+}

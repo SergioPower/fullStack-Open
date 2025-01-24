@@ -4,7 +4,7 @@ import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import bookService from './services/book'
 import Notification from './components/Error'
-import styles from './App.module.css'
+import styles from './styles/App.module.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -113,7 +113,7 @@ const App = () => {
 
   return (
 	 <div className={styles.phonebook}>
-		<h2>Phonebook</h2>
+		<h1>Phonebook</h1>
 		<Notification message={errorMessage} />
 		<Filter value={filter} onChange={handleFilterChange} />
 

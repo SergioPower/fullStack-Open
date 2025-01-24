@@ -1,0 +1,12 @@
+.filterContainer {
+	margin-bottom: 20px;
+}
+
+.filterInput {
+	width: calc(100% - 22px);
+	padding: 10px;
+	margin-top: 5px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-family: 'Roboto', sans-serif;
+}
