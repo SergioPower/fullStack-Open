@@ -1,0 +1,44 @@
+.contactList {
+	width: 100%;
+	max-width: 600px;
+	margin: 0 auto;
+	padding: 10px;
+	list-style: none; /* Quitar los puntos de la lista */
+}
+
+.contactItem {
+	display: flex; /* Usar Flexbox */
+	align-items: center; /* Alinear verticalmente los elementos */
+	justify-content: space-between; /* Espacio entre los elementos */
+	padding: 10px;
+	border-bottom: 1px solid #ddd; /* Línea divisoria entre contactos */
+}
+
+.contactItem:last-child {
+	border-bottom: none; /* Quitar la línea del último contacto */
+}
+
+.contactName {
+	flex: 1; /* Ocupar una parte del espacio disponible */
+	font-weight: bold;
+	margin-right: 10px; /* Espacio entre el nombre y el número */
+}
+
+.contactNumber {
+	flex: 1; /* Ocupar una parte del espacio disponible */
+	color: #555;
+	margin-right: 10px; /* Espacio entre el número y el botón */
+}
+
+.deleteButton {
+	background-color: #dc3545; /* Color rojo para el botón */
+	color: white;
+	border: none;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.deleteButton:hover {
+	background-color: #c82333; /* Color rojo más oscuro al pasar el mouse */
+}
