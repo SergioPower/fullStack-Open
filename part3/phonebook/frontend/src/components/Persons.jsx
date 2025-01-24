@@ -7,8 +7,8 @@ const Persons = ({ personsToShow, deletePerson }) => {
       {personsToShow.map(person => 
         <li key={person.id} className={styles.contact}>
           <span>{person.name}</span>
-          <button onClick={() => deletePerson(person.id)}>Delete</button>
           <p>{person.number}</p>
+          <button onClick={() => deletePerson(person.id)}>Delete</button>
           
         </li>
       )}
