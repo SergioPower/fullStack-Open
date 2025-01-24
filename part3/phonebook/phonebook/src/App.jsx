@@ -4,6 +4,7 @@ import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import bookService from './services/book'
 import Notification from './components/Error'
+import styles from './App.module.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -35,8 +36,6 @@ const App = () => {
 		if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
 			const updatedPerson = { ...personExists, number: newPhone };
 
-			console.log(updatedPerson);
-			
 			bookService
 			.update(updatedPerson.id, updatedPerson)
 			.then(returnedPerson => {
@@ -84,8 +83,6 @@ const App = () => {
 };
 
   const deletePerson = (id) => {
-	 console.log(id);
-	 
 	 const person = persons.find(person => person.id === id)
 	 if(window.confirm(`Delete ${person.name}?`)){
 		bookService
@@ -109,13 +106,13 @@ const App = () => {
   const handleFilterChange = (event) => {
 	 setFilter(event.target.value)
   }
-
+	
   const personsToShow = filter
 	 ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
 	 : persons
 
   return (
-	 <div>
+	 <div className={styles.phonebook}>
 		<h2>Phonebook</h2>
 		<Notification message={errorMessage} />
 		<Filter value={filter} onChange={handleFilterChange} />

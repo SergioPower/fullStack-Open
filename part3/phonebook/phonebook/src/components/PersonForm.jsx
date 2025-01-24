@@ -1,6 +1,8 @@
+import styles from  '../styles/PersonForm.module.css'
+
 const PersonForm = ({ addPerson, newName, handleNameChange, newNumber, handleNumberChange }) => {
   return (
-    <form onSubmit={addPerson}>
+    <form onSubmit={addPerson} className={styles.form}>
       <div>
         name: <input 
         value={newName} 
