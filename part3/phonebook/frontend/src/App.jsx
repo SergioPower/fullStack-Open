@@ -1,5 +1,5 @@
 import { useState , useEffect} from 'react'
-import Persons from './components/Persons'
+import Persons from './components/ContactList'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import bookService from './services/book'
@@ -21,71 +21,96 @@ const App = () => {
 		})
   },[])
 
+	const normalizeName = (newName) => {
+    // Convierte el nombre a minúsculas y luego capitaliza la primera letra
+    return newName.charAt(0).toUpperCase() + newName.slice(1).toLowerCase();
+  };
+
+	const validatePhoneNumber = (newNumber) => {
+    const regex = /^\d{10}$/;
+    return regex.test(newNumber);
+  };
+
+	
   const addPerson = (event) => {
 	  event.preventDefault();
 
-	const personExists = persons.find(person => person.name === newName);
-	const personWithDifferentPhone = personExists && personExists.number !== newPhone;
+		const cleanedPhoneNumber = newNumber.replace(/\D/g, '');
 
-	if (personExists && !personWithDifferentPhone) {
-		alert(`${newName} is already added to phonebook`);
-		return;
-	}
-
-	if (personWithDifferentPhone) {
-		if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
-			const updatedPerson = { ...personExists, number: newPhone };
-
-			bookService
-			.update(updatedPerson.id, updatedPerson)
-			.then(returnedPerson => {
-				setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson));
-				setNewName('');
-				setNewPhone('');
-				setErrorMessage(`Updated ${newName}'s phone number`);
-				setTimeout(() => {
-					setErrorMessage(null);
-				}, 5000);
-			})
-			.catch(error => {
-				setErrorMessage(`Failed to update ${newName}: ${error.response.data.error}`);
-				setTimeout(() => {
-					setErrorMessage(null);
-				}, 5000);
-			});
+		if (cleanedPhoneNumber.length !== 10) {
+			setErrorMessage('Phone number must be 10 digits long'); 
+			return;
 		}
-		return;
-  }
 
-  const personObject = {
-	 name: newName,
-	 number: newPhone,
-	 id: persons.length + 1, // Asegúrate de que la ID sea única o usa el id generado en el backend.
-  };
+		// Check if the phone numer exists in the phonebook
+		const personExists = persons.find(person => person.name === newName);
+		const personWithDifferentPhone = personExists && personExists.number !== newPhone;
 
-  bookService
-	 .create(personObject)
-	 .then(returnedPerson => {
-		setPersons(persons.concat(returnedPerson));
-		setNewName('');
-		setNewPhone('');
-		setErrorMessage(`Added ${newName}`);
-		setTimeout(() => {
-		  setErrorMessage(null);
-		}, 5000);
-	 })
-	 .catch(error => {
-		setErrorMessage(`Failed to add ${newName}: ${error.response.data.error}`);
-		setTimeout(() => {
-		  setErrorMessage(null);
-		}, 5000);
-	 });
-};
+		// If the person exists, ask the user if they want to update the phone number
+		if (personExists && !personWithDifferentPhone) {
+			alert(`${newName} is already added to phonebook`);
+			return;
+		}
+
+		// If the person exists, ask the user if they want to update the phone number
+		if (personWithDifferentPhone) {
+			if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+				const updatedPerson = { ...personExists, number: cleanedPhoneNumber };
+
+				bookService
+				.update(updatedPerson.id, updatedPerson)
+				.then(returnedPerson => {
+					setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson));
+					setNewName('');
+					setNewPhone('');
+					setErrorMessage(`Updated ${newName}'s phone number`);
+					setTimeout(() => {
+						setErrorMessage(null);
+					}, 5000);
+				})
+				.catch(error => {
+					setErrorMessage(`Failed to update ${newName}: ${error.response.data.error}`);
+					setTimeout(() => {
+						setErrorMessage(null);
+					}, 5000);
+				});
+			}
+			return;
+		}
+
+
+		const personObject = {
+		name: normalizeName(newName),
+		number: cleanedPhoneNumber,
+		id: persons.length + 1, // Asegúrate de que la ID sea única o usa el id generado en el backend.
+		};
+
+		console.log(personObject);
+		
+
+		bookService
+		.create(personObject)
+		.then(returnedPerson => {
+			setPersons(persons.concat(returnedPerson));
+			setNewName('');
+			setNewPhone('');
+			setErrorMessage(`Added ${newName}`);
+			setTimeout(() => {
+				setErrorMessage(null);
+			}, 5000);
+		})
+		.catch(error => {
+			setErrorMessage(`Failed to add ${newName}: ${error.response.data.error}`);
+			setTimeout(() => {
+				setErrorMessage(null);
+			}, 5000);
+		});
+	};
 
   const deletePerson = (id) => {
-	 const person = persons.find(person => person.id === id)
-	 if(window.confirm(`Delete ${person.name}?`)){
-		bookService
+	  const person = persons.find(person => person.id === id)
+	  if(window.confirm(`Delete ${person.name}?`)){
+		  bookService
 		  .deletePerson(id)
 		  .then(() => {
 			  setPersons( persons.filter( person => person.id !== id ) )
@@ -93,29 +118,30 @@ const App = () => {
 		  } ).catch( error => {
 			  setErrorMessage(`Failed to delete ${newName}: ${error.response.data.error}`);
 		  })
-	 }
+	  }
   }
+
   const handlePersonChange = (event) => {
-	 setNewName(event.target.value)
+	  setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-	 setNewPhone(event.target.value)
+	  setNewPhone(event.target.value)
   }
 
   const handleFilterChange = (event) => {
-	 setFilter(event.target.value)
+	  setFilter(event.target.value)
   }
 	
   const personsToShow = filter
-	 ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
-	 : persons
+	  ? persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+	  : persons
 
   return (
-	 <div className={styles.phonebook}>
-		<h1>Phonebook</h1>
-		<Notification message={errorMessage} />
-		<Filter value={filter} onChange={handleFilterChange} />
+	  <div className={styles.phonebook}>
+		  <h1>Phonebook</h1>
+		  <Notification message={errorMessage} />
+		  <Filter value={filter} onChange={handleFilterChange} />
 
 		<h2>add a new</h2>
 		<PersonForm 

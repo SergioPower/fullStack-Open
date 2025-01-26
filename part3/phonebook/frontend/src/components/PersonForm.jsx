@@ -7,12 +7,17 @@ const PersonForm = ({ addPerson, newName, handleNameChange, newNumber, handleNum
         name: <input 
         value={newName} 
         onChange={handleNameChange}
+				required
         />
       </div>
       <div>
         number: <input 
         value={newNumber} 
-        onChange={handleNumberChange}/></div>
+        onChange={handleNumberChange}
+				placeholder='Enter 10 digits'
+				required
+				/>
+			</div>
       <div>
         <button type="submit">add</button>
       </div>

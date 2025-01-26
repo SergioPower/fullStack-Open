@@ -6,7 +6,8 @@ const Notification = ({ message }) => {
   }
 
   return (
-    <div className="error" className={styles.notificationContainer}>
+    <div className={`error ${styles.notificationContainer}`}>
+
       <p className={styles.notificationMessage}>{message}</p>
     </div>
   )
