@@ -25,17 +25,13 @@ const App = () => {
     // Convierte el nombre a minúsculas y luego capitaliza la primera letra
     return newName.charAt(0).toUpperCase() + newName.slice(1).toLowerCase();
   };
-
-	const validatePhoneNumber = (newNumber) => {
-    const regex = /^\d{10}$/;
-    return regex.test(newNumber);
-  };
-
 	
   const addPerson = (event) => {
 	  event.preventDefault();
 
-		const cleanedPhoneNumber = newNumber.replace(/\D/g, '');
+		const newName = normalizeName(newName);
+		
+		const cleanedPhoneNumber = newPhone.replace(/\D/g, '');
 
 		if (cleanedPhoneNumber.length !== 10) {
 			setErrorMessage('Phone number must be 10 digits long'); 
