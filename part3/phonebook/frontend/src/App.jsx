@@ -29,7 +29,7 @@ const App = () => {
   const addPerson = (event) => {
 	  event.preventDefault();
 
-		const newName = normalizeName(newName);
+		const cleanedNewName = normalizeName(newName);
 		
 		const cleanedPhoneNumber = newPhone.replace(/\D/g, '');
 
@@ -39,18 +39,18 @@ const App = () => {
 		}
 
 		// Check if the phone numer exists in the phonebook
-		const personExists = persons.find(person => person.name === newName);
-		const personWithDifferentPhone = personExists && personExists.number !== newPhone;
+		const personExists = persons.find(person => person.name === cleanedNewName);
+		const personWithDifferentPhone = personExists && personExists.number !== cleanedPhoneNumber;
 
 		// If the person exists, ask the user if they want to update the phone number
 		if (personExists && !personWithDifferentPhone) {
-			alert(`${newName} is already added to phonebook`);
+			alert(`${cleanedNewName} is already added to phonebook`);
 			return;
 		}
 
 		// If the person exists, ask the user if they want to update the phone number
 		if (personWithDifferentPhone) {
-			if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+			if (window.confirm(`${cleanedNewName} is already added to phonebook, replace the old number with a new one?`)) {
 				const updatedPerson = { ...personExists, number: cleanedPhoneNumber };
 
 				bookService
@@ -59,13 +59,13 @@ const App = () => {
 					setPersons(persons.map(person => person.id !== updatedPerson.id ? person : returnedPerson));
 					setNewName('');
 					setNewPhone('');
-					setErrorMessage(`Updated ${newName}'s phone number`);
+					setErrorMessage(`Updated ${cleanedNewName}'s phone number`);
 					setTimeout(() => {
 						setErrorMessage(null);
 					}, 5000);
 				})
 				.catch(error => {
-					setErrorMessage(`Failed to update ${newName}: ${error.response.data.error}`);
+					setErrorMessage(`Failed to update ${cleanedNewName}: ${error.response.data.error}`);
 					setTimeout(() => {
 						setErrorMessage(null);
 					}, 5000);
@@ -74,15 +74,11 @@ const App = () => {
 			return;
 		}
 
-
 		const personObject = {
-		name: normalizeName(newName),
+		name: cleanedNewName,
 		number: cleanedPhoneNumber,
 		id: persons.length + 1, // Asegúrate de que la ID sea única o usa el id generado en el backend.
 		};
-
-		console.log(personObject);
-		
 
 		bookService
 		.create(personObject)
@@ -90,13 +86,13 @@ const App = () => {
 			setPersons(persons.concat(returnedPerson));
 			setNewName('');
 			setNewPhone('');
-			setErrorMessage(`Added ${newName}`);
+			setErrorMessage(`Added ${cleanedNewName}`);
 			setTimeout(() => {
 				setErrorMessage(null);
 			}, 5000);
 		})
 		.catch(error => {
-			setErrorMessage(`Failed to add ${newName}: ${error.response.data.error}`);
+			setErrorMessage(`Failed to add ${cleanedNewName}: ${error.response.data.error}`);
 			setTimeout(() => {
 				setErrorMessage(null);
 			}, 5000);
