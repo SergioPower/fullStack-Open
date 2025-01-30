@@ -35,6 +35,9 @@ const App = () => {
 
 		if (cleanedPhoneNumber.length !== 10) {
 			setErrorMessage('Phone number must be 10 digits long'); 
+			setTimeout(() => {
+				setErrorMessage(null);
+			  }, 5000)
 			return;
 		}
 
@@ -107,8 +110,14 @@ const App = () => {
 		  .then(() => {
 			  setPersons( persons.filter( person => person.id !== id ) )
 			  setErrorMessage(`Deleted ${newName}`);
+			  setTimeout(() => {
+				setErrorMessage(null);
+			  }, 5000)
 		  } ).catch( error => {
 			  setErrorMessage(`Failed to delete ${newName}: ${error.response.data.error}`);
+			  setTimeout(() => {
+				setErrorMessage(null);
+			  }, 5000)
 		  })
 	  }
   }
